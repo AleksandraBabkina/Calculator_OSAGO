@@ -1,4 +1,4 @@
-# calculator_OSAGO
+# Calculator_OSAGO
 
 **Description**
 
