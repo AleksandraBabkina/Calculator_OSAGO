@@ -1,39 +1,40 @@
 # calculator_OSAGO
 
-**Описание**
+**Description**
 
-Программа выполняет расчёт на основе данных о водителе и транспортном средстве, таких как стаж водителя, возраст водителя, коэффициент бонус-малус (КБМ), мощность двигателя, тип транспортного средства, использование транспорта сезонно, регистрация транспортного средства в другом государстве и так далее. От этих параметров зависят значения коэффициентов:
-1. Коэффициент за стаж водителя (КС),
-2. Коэффициент за возраст водителя (КВ),
-3. коэффициент бонус-малус (КБМ),
-4. Коэффициент за мощность двигателя (КМ),
-5. Коэффициент за тип транспортного средства (КТ),
-6. Коэффициент за сезонность использования транспорта (КСЕ),
-7. Коэффициент за регистрацию транспортного средства в другом государстве (КР).
+The program performs calculations based on data about the driver and the vehicle, such as the driver’s experience, the driver’s age, the bonus-malus coefficient (KBM), engine power, vehicle type, seasonal use of the vehicle, registration of the vehicle in another country, and so on. These parameters determine the values of the following coefficients:
+1. Driver’s experience coefficient (KE),
+2. Driver’s age coefficient (KA),
+3. Bonus-malus coefficient (KBM),
+4. Engine power coefficient (KP),
+5. Vehicle type coefficient (KT),
+6. Seasonal use coefficient (KSE),
+7. Registration in another country coefficient (KRC).
 
-**Функциональное описание**
+**Functional Description**
 
-Калькулятор принимает данные о водителе и транспортном средстве, извлекает необходимые коэффициенты из базы данных и, применяя их к базовой стоимости полиса, вычисляет окончательную сумму.
+The calculator accepts data about the driver and the vehicle, retrieves the necessary coefficients from the database, and applies them to the base cost of the policy to calculate the final amount.
 
-**Принцип работы**
+**How It Works**
 
-1. Программа запрашивает данные о водителе и транспортном средстве.
-2. Для каждого из параметров (стаж, возраст, мощность и другие) она находит соответствующие коэффициенты в базе данных.
-3. Далее калькулятор использует эти коэффициенты для расчета стоимости ОСАГО, выводя итоговую сумму для пользователя.
+1. The program asks for data about the driver and the vehicle.
+2. For each parameter (experience, age, power, and others), it finds the corresponding coefficients in the database.
+3. Then, the calculator uses these coefficients to calculate the OSAGO cost and outputs the final amount for the user.
 
-**Структура ввода**
+**Input Structure**
 
-Для корректного расчета полиса, программа требует следующие данные:
-1. Стаж водителя (в годах)
-2. Возраст водителя (в годах)
-3. Коэффициент бонус-малус (КБМ)
-4. Мощность двигателя (в л.с.)
-5. Тип транспортного средства (например, легковой автомобиль, грузовик и т.д.)
-6. Использование транспорта сезонно (да/нет)
-7. Регистрация транспортного средства в другом государстве (да/нет)
+To correctly calculate the policy, the program requires the following data:
+1. Driver’s experience (in years)
+2. Driver’s age (in years)
+3. Bonus-malus coefficient (KBM)
+4. Engine power (in horsepower)
+5. Vehicle type (e.g., passenger car, truck, etc.)
+6. Seasonal use of the vehicle (yes/no)
+7. Registration of the vehicle in another country (yes/no)
 
-**Технические требования**
-Для работы калькулятора необходимы:
+**Technical Requirements**
+
+To run the calculator, the following is required:
 1. Python 3.x
-2. Установленные библиотеки: sqlalchemy, pandas, IPython, functools, operator, time
-3. База данных с таблицами: AlBabkinaKvs, AlBabkinaKbm, AlBabkinaKm, AlBabkinaKs, AlBabkinaKp, AlBabkinaKt
+2. Installed libraries: sqlalchemy, pandas, IPython, functools, operator, time
+3. Database with the following tables: AlBabkinaKvs, AlBabkinaKbm, AlBabkinaKm, AlBabkinaKs, AlBabkinaKp, AlBabkinaKt
