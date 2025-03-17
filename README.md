@@ -9,15 +9,15 @@ The program performs calculations based on data about the driver and the vehicle
 6. Seasonal use coefficient (KSE),
 7. Registration in another country coefficient (KRC).
 
-#Functional Description
+##Functional Description
 The calculator accepts data about the driver and the vehicle, retrieves the necessary coefficients from the database, and applies them to the base cost of the policy to calculate the final amount.
 
-#How It Works
+##How It Works
 1. The program asks for data about the driver and the vehicle.
 2. For each parameter (experience, age, power, and others), it finds the corresponding coefficients in the database.
 3. Then, the calculator uses these coefficients to calculate the OSAGO cost and outputs the final amount for the user.
 
-#Input Structure
+##Input Structure
 To correctly calculate the policy, the program requires the following data:
 1. Driver’s experience (in years)
 2. Driver’s age (in years)
@@ -27,7 +27,7 @@ To correctly calculate the policy, the program requires the following data:
 6. Seasonal use of the vehicle (yes/no)
 7. Registration of the vehicle in another country (yes/no)
 
-#Technical Requirements
+##Technical Requirements
 To run the calculator, the following is required:
 1. Python 3.x
 2. Installed libraries: sqlalchemy, pandas, IPython, functools, operator, time
