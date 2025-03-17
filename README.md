@@ -1,7 +1,4 @@
 # Calculator_OSAGO
-
-**Description**
-
 The program performs calculations based on data about the driver and the vehicle, such as the driver’s experience, the driver’s age, the bonus-malus coefficient (KBM), engine power, vehicle type, seasonal use of the vehicle, registration of the vehicle in another country, and so on. These parameters determine the values of the following coefficients:
 1. Driver’s experience coefficient (KE),
 2. Driver’s age coefficient (KA),
