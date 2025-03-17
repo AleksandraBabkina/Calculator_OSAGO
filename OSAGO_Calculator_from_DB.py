@@ -1,27 +1,15 @@
-#TAR - Vehicle Type - SELECT * FROM al_babkina_TAR
-#KBM - Driver’s Accident Record - SELECT * FROM al_babkina_KBM
-#KVS - Driver’s Age and Driving Experience - SELECT * FROM al_babkina_KVS
-#KM - Engine Power - SELECT * FROM al_babkina_KM
-#KO - Number of Drivers - SELECT * FROM al_babkina_KO
-#KP - Insurance Term - SELECT * FROM al_babkina_KP
-#KS - Period of Vehicle Use During the Insurance Term - SELECT * FROM al_babkina_KS
-#KT - Registration Address - SELECT * FROM al_babkina_KT
-
-from sqlalchemy import create_engine, Column, String, Float, select, or_, and_
+from sqlalchemy import create_engine, Column, String, Float, select
 from sqlalchemy.orm import sessionmaker, declarative_base
-from functools import reduce
-from operator import mul
 import re
-import pandas as pd
-from IPython.display import display, clear_output 
 import time
+from IPython.display import clear_output
 
-#Header with connection DO NOT TOUCH”
+# Header with connection DO NOT TOUCH
 username = 'username'
 password = 'password'
 dsn = 'dsn'
 
-conection_string = f'oracle+oracledb://{username}:{password}@{dsn}' # Open sql
+conection_string = f'oracle+oracledb://{username}:{password}@{dsn}'  # Open sql
 
 # Creating the connection engine
 engine = create_engine(conection_string)
@@ -34,61 +22,13 @@ class AlBabkinaTar(Base):
     COEFF_TS_TAR_MIN = Column(Float)
     COEFF_TS_TAR_MAX = Column(Float)
 
-class AlBabkinaKbm(Base):
-    __tablename__ = 'al_babkina_kbm'
-    CLASS_KBM = Column(String, primary_key=True)
-    COEFF_KBM = Column(Float)
-
-class AlBabkinaKm(Base):
-    __tablename__ = 'al_babkina_km'
-    TYPE_KM_TS = Column(String, primary_key=True)
-    COEFF_KM = Column(Float)
-
-class AlBabkinaKo(Base):
-    __tablename__ = 'al_babkina_ko'
-    TYPE_KO = Column(String, primary_key=True)
-    COEFF_KO = Column(Float)
-
-class AlBabkinaKp(Base):
-    __tablename__ = 'al_babkina_kp'
-    DAY_STRAH_KP = Column(String, primary_key=True)
-    COEFF_KP = Column(Float)
-
-class AlBabkinaKs(Base):
-    __tablename__ = 'al_babkina_ks'
-    DAY_STRAH_KS = Column(String, primary_key=True)
-    COEFF_KS = Column(Float)
-
-class AlBabkinaKvs(Base):
-    __tablename__ = 'al_babkina_kvs'
-    AGE_KVS = Column(String, primary_key=True)
-    STAG_KVS_0 = Column(Float)
-    STAG_KVS_1 = Column(Float)
-    STAG_KVS_2 = Column(Float)
-    STAG_KVS_3_4 = Column(Float)
-    STAG_KVS_5_6 = Column(Float)
-    STAG_KVS_7_9 = Column(Float)
-    STAG_KVS_10_14 = Column(Float)
-    STAG_KVS_MORE_14 = Column(Float)
-
-class AlBabkinaKt(Base):
-    __tablename__ = 'AL_BABKINA_KТ'
-    TER_KT = Column(String, primary_key=True)
-    TYPE_TS_KT = Column(String, primary_key=True)
-    COEFF_KT = Column(Float)
-
 # Creating the session
 Session = sessionmaker(bind=engine)
 session = Session()
 
-print("Калькулятор ОСАГО\n")
-
+# Data entry for the vehicle type and tariff selection
 coefficients = []
-
 time.sleep(1)
-
-##################################################################### TARIF ######################################################################
-type_ts_tar_values = session.execute(select(AlBabkinaTar.TYPE_TS_TAR).distinct()).all()
 
 replace_dict = {
     "А": "A",
@@ -110,7 +50,7 @@ replace_dict = {
 while True:
     try:
         clear_output()
-        user_tar = str(input("Введите категорию транспортного средства (A, M, B, BE, C, CE, D, DE, Tm, Tb, Другое):\n"))
+        user_tar = input("Введите категорию транспортного средства (A, M, B, BE, C, CE, D, DE, Tm, Tb, Другое):\n")
         user_tar = user_tar.upper()
         user_tar = ''.join(replace_dict.get(char, char) for char in user_tar)
         user_tar = ''.join(char for char in user_tar if char.isalnum())
@@ -120,11 +60,12 @@ while True:
             print("\nДопустимые значения: A, M, B, BE, C, CE, D, DE, Tm, Tb, Другое")
             time.sleep(1)
             continue
-    except (ValueError,IndexError):    
+    except (ValueError, IndexError):    
         print("Неверно введенное значение")
         time.sleep(1)
         clear_output()
-        
+
+# Process based on the selected vehicle type
 while True:
     try:
         if user_tar in ["B", "BE"]:
@@ -139,8 +80,8 @@ while True:
                     elif taxi_or_not == 0:
                         while True:
                             try:
-                                user_tar_type = ["Физ. лица", "Юр. лица"] 
-                                print("Выберите вашу категорию лиц:") 
+                                user_tar_type = ["Физ. лица", "Юр. лица"]
+                                print("Выберите вашу категорию лиц:")
                                 for idx, option in enumerate(user_tar_type, 1):
                                     print(f"{idx}. {option}")
                                 tar_type_choice = int(input("Введите номер вашего выбора: ")) 
@@ -148,7 +89,7 @@ while True:
                                 print()
                                 time.sleep(1)
                                 break
-                            except (ValueError,IndexError):
+                            except (ValueError, IndexError):
                                 print("\nОшибка. Введите только число 1 или 2\n")
                                 time.sleep(1)
                                 clear_output()
@@ -158,7 +99,7 @@ while True:
                         print("Введите цифру 1 или 2")
                         time.sleep(1)
                         continue
-                except (ValueError,IndexError):
+                except (ValueError, IndexError):
                     print("\nОшибка. Введите только число 1 или 2\n")
                     time.sleep(1)
                     clear_output()
@@ -166,7 +107,7 @@ while True:
             while True:
                 try:
                     mass = input("\nВведите массу транспортного средства в тоннах:  ")
-                    if int(mass)>=0:
+                    if int(mass) >= 0:
                         mass = mass.replace(" ", "").replace(",", ".")
                         mass = int(round(float(mass)))
                         break
@@ -174,14 +115,14 @@ while True:
                         print("Масса быть только положительным числом.")
                         time.sleep(1)
                         clear_output()
-                except (ValueError,IndexError):
+                except (ValueError, IndexError):
                     print("Введите только число")
                     time.sleep(1)
                     clear_output()
         elif user_tar in ["D", "DE"]:
             while True:
                 try:
-                    reg_per = int(input("\nЕсли транспорт используется на регулярных перевозках с посадкой и высадкой пассажиров - ВВЕДИТЕ 1, если НЕТ - 0: "))
+                    reg_per = int(input("\nЕсли транспорт используется на регулярных перевозках с посадкой и высадкой пассажиров - ВВЕДИТЕ 1, если НЕТ - 0: "))
                     if reg_per == 1:
                         clear_output()
                         break
@@ -192,14 +133,14 @@ while True:
                         print("Введите цифру 1 или 2")
                         time.sleep(1)
                         continue
-                except (ValueError,IndexError):
+                except (ValueError, IndexError):
                     print("Введите цифру 1 или 2")
                     time.sleep(1)
                     clear_output()
         else:
             break
         break
-    except (ValueError,IndexError):    
+    except (ValueError, IndexError):    
         print("Неверно введенное значение")
         time.sleep(1)
         clear_output()
@@ -208,7 +149,7 @@ def for_d():
     while True:
         try:
             mass = input("\nВведите число пассажирских мест:  ")
-            if int(mass)>=0:
+            if int(mass) >= 0:
                 mass = mass.replace(" ", "").replace(",", ".")
                 mass = int(round(float(mass)))
                 break
@@ -216,7 +157,7 @@ def for_d():
                 print("Число пассажирских мест может быть только положительным числом.")
                 time.sleep(1)
                 clear_output()
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             print("Введите только число")
             time.sleep(1)
             clear_output()
@@ -235,7 +176,7 @@ elif user_tar in ["C", "CE"] and mass > 16:
 elif user_tar in ["C", "CE"] and mass <= 16:
     user_input_tar_cleaned = "«C» и «CE» с массой 16 тонн и менее"
 elif user_tar in ["D", "DE"] and reg_per == 1:
-    user_input_tar_cleaned = "«D» и «DE», используемые на регулярных перевозках с посадкой и высадкой пассажиров"
+    user_input_tar_cleaned = "«D» и «DE», используемые на регулярных перевозках с посадкой и высадкой пассажиров"
 elif user_tar in ["D", "DE"] and mass <= 16:
     user_input_tar_cleaned = "«D» и «DE» с числом пассажирских мест до 16 включительно"
 elif user_tar in ["D", "DE"] and mass > 16:
@@ -264,7 +205,7 @@ while True:
             print("Ваш коэффициент не находится в указанном диапозоне")
             time.sleep(1)
             clear_output()
-    except (ValueError,IndexError):
+    except (ValueError, IndexError):
         print("Неверно введенное значение")
         time.sleep(1)
         clear_output()
@@ -272,22 +213,22 @@ while True:
 time.sleep(1)
 clear_output()
 
-##################################################################### KO ######################################################################\
+#----------------------- KO ----------------------- 
 if user_tar in ["B", "BE"] and mass in ["Физ. лица", "Юр. лица"]:
     type_ko1 = mass
 else:
     while True:
         try:
             clear_output()
-            ko_kat_options = ["Физ. лица", "Юр. лица"] 
-            print("Выберите вашу категорию лиц:") 
+            ko_kat_options = ["Физ. лица", "Юр. лица"]
+            print("Выберите вашу категорию лиц:")
             for idx, option in enumerate(ko_kat_options, 1):
                 print(f"{idx}. {option}")
-            ko_kat_choice = int(input("Введите номер вашего выбора: ")) 
+            ko_kat_choice = int(input("Введите номер вашего выбора: "))
             type_ko1 = ko_kat_options[ko_kat_choice - 1]
             time.sleep(1)
             break
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             print("\nОшибка. Введите только число 1 или 2\n")
             time.sleep(1.3)
 clear_output()
@@ -295,15 +236,15 @@ clear_output()
 while True:
     try:
         clear_output()
-        ko_ogr_options = ["Ограниченное", "Не ограниченное"] 
-        print("Количество водителей ограничено?") 
+        ko_ogr_options = ["Ограниченное", "Не ограниченное"]
+        print("Количество водителей ограничено?")
         for idx, option in enumerate(ko_ogr_options, 1):
             print(f"{idx}. {option}")
-        ko_ogr_choice = int(input("Введите номер вашего выбора: ")) 
+        ko_ogr_choice = int(input("Введите номер вашего выбора: "))
         type_ko2 = ko_ogr_options[ko_ogr_choice - 1]
         time.sleep(1)
         break
-    except (ValueError,IndexError):
+    except (ValueError, IndexError):
         print("\nОшибка. Введите только число 1 или 2\n")
         time.sleep(1.3)
 clear_output()
@@ -328,13 +269,13 @@ coefficients.append(selected_value_ko)
 time.sleep(1)
 clear_output()
 
-####################################################################### KVS #######################################################################
+#-----------------------  KVS ----------------------- 
 def kvs():
     type_kvs_values = session.execute(select(AlBabkinaKvs.AGE_KVS).distinct()).all()
     while True:
         try:
             user_experience = input("\nВведите стаж (в годах):  ")
-            if int(user_experience)>=0:
+            if int(user_experience) >= 0:
                 user_experience = user_experience.replace(" ", "").replace(",", ".")
                 user_experience = int(round(float(user_experience)))
                 break
@@ -342,7 +283,7 @@ def kvs():
                 print("Стаж может быть только положительным числом.")
                 time.sleep(1)
                 clear_output()
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             print("Введите только число")
             time.sleep(1)
             clear_output()
@@ -350,7 +291,7 @@ def kvs():
     while True:
         try:
             user_input_kvs = input("\nВведите ваш возраст:  ")
-            if int(user_input_kvs)>=16 and int(user_input_kvs)-int(user_experience) >=16:
+            if int(user_input_kvs) >= 16 and int(user_input_kvs) - int(user_experience) >= 16:
                 user_input_kvs = user_input_kvs.replace(" ", "").replace(",", ".")
                 user_input_kvs = int(round(float(user_input_kvs)))
                 break
@@ -358,7 +299,7 @@ def kvs():
                 print("\nВозраст может быть только больше или равно 16.\nСтаж не может быть больше допустимого возраста вождения.")
                 time.sleep(2.5)
                 clear_output()
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             print("Введите только число")
             time.sleep(1)
             clear_output()
@@ -404,16 +345,17 @@ def kvs():
     if selected_value_kvs != 0.0:
         coef_kvs.append(selected_value_kvs)
 
-
-####################################################################### KBM #######################################################################
+#----------------------- KBM -----------------------
 def kbm():
     while True:
         try:
             user_input_kbm = str(input("\nВведите КБМ (3.92, 2.94, 2.25, 1.76, 1.17, 1, 0.91, 0.83, 0.78, 0.74, 0.68, 0.63, 0.57, 0.52, 0.46):\n"))
-            if user_input_kbm == 1:
-                user_input_kbm = int(user_input_kbm.replace(" ", ""))
+            user_input_kbm = user_input_kbm.replace(" ", "").replace(",", ".")
+            
+            if user_input_kbm == "1":
+                user_input_kbm = 1.0
             else:
-                user_input_kbm = float(user_input_kbm.replace(" ", "").replace(",", "."))
+                user_input_kbm = float(user_input_kbm)
                 
             if user_input_kbm in [3.92, 2.94, 2.25, 1.76, 1.17, 1, 0.91, 0.83, 0.78, 0.74, 0.68, 0.63, 0.57, 0.52, 0.46]:
                 matching_values_kbm = session.execute(select(AlBabkinaKbm).filter(AlBabkinaKbm.COEFF_KBM.like(f"%{user_input_kbm}%"))).scalars().all()
@@ -429,7 +371,6 @@ def kbm():
             print("Нет такого значения КБМ. Введите один из представленных значений.")
             time.sleep(1)
             clear_output()
-##############################################################################################################################################
 
 coef_kvs = []
 coef_kbm = []
@@ -448,14 +389,17 @@ if type_ko2 == "Ограниченное":
         print(f"\nВодитель {i+1}:")
         kvs()
         kbm()
-        max_kvs = max(coef_kvs)
-        max_kbm = max(coef_kbm)
-        coefficients.append(max_kvs)
-        coefficients.append(max_kbm)
+        
+        # Ensure that the lists aren't empty before trying to get max values
+        if coef_kvs and coef_kbm:
+            max_kvs = max(coef_kvs)
+            max_kbm = max(coef_kbm)
+            coefficients.append(max_kvs)
+            coefficients.append(max_kbm)
         time.sleep(1)
         clear_output()
 
-##################################################################### KM ######################################################################
+#----------------------- KM -----------------------
 type_km_ts_values = session.execute(select(AlBabkinaKm.TYPE_KM_TS).distinct()).all()
 
 while True:
@@ -464,7 +408,7 @@ while True:
         user_input_km = user_input_km.replace(" ", "").replace(",", ".")
         user_input_km = int(round(float(user_input_km)))
         break
-    except (ValueError,IndexError):
+    except (ValueError, IndexError):
         print("Введите только число")
         time.sleep(1)
         clear_output()
@@ -494,8 +438,7 @@ coefficients.append(selected_value_km)
 time.sleep(1)
 clear_output()
 
-
-############################################################# КS ######################################################################
+#----------------------- КS -----------------------
 while True:
     try:
         user_input_ks = int(input("\nЕсли транспорт используется сезонно (снегоуборочные, газонокосильные, сельскохозяйственные, поливочные и другие спец машины) - ВВЕДИТЕ 1, если НЕТ - 0: "))
@@ -503,7 +446,7 @@ while True:
             while True:
                 try:
                     choice2 = int(input("\nСколько месяцев будет использоваться транспортное средство?"))
-                    if choice2>0:
+                    if choice2 > 0:
                         if 0 < choice2 <= 3:
                             user_input_ks = "от 0 до 3"
                             break
@@ -517,12 +460,9 @@ while True:
                             user_input_ks = "от 5 до 6"
                             break
                         elif 6 < choice2 <= 7:
-                            user_input_ks = "от 5 до 6"
-                            break
-                        elif 7 < choice2 <= 8:
                             user_input_ks = "от 7 до 8"
                             break
-                        elif 8 < choice2 <= 9:
+                        elif 7 < choice2 <= 8:
                             user_input_ks = "от 8 до 9"
                             break
                         elif choice2 > 9:
@@ -555,8 +495,7 @@ while True:
         time.sleep(1)
         clear_output()
 
-
-##################################################################### КP ######################################################################
+#----------------------- КP -----------------------
 while True:
     try:
         user_choice_kp = int(input("\nЕсли транспорт был зарегестрирован на территории иностранного государства и ВРЕМЕННО используется на территории РФ - ВВЕДИТЕ 1, если НЕТ - 0: "))
@@ -623,7 +562,7 @@ while True:
         time.sleep(1)
         clear_output()
 
-####################################################################### КТ #######################################################################
+#----------------------- КТ -----------------------
 while True:
     try:
         clear_output()
@@ -645,9 +584,7 @@ while ter_kt == 0:
     while True:
         try:
             clear_output()
-            # Prompt the user to enter keywords for searching in the TER_KT
             keywords = input("Введите территорию на которой зарегестрированно ваше транспортное средство: ").split()
-            # Search for all unique values in the TER_KT column that match the keywords
             conditions = [AlBabkinaKt.TER_KT.ilike(f"%{keyword}%") for keyword in keywords] 
             ter_kt_values = session.execute(select(AlBabkinaKt.TER_KT).filter(or_(*conditions)).distinct()).all()
             if not ter_kt_values:
@@ -655,7 +592,7 @@ while ter_kt == 0:
                 time.sleep(1)
                 clear_output()
                 continue
-            else: # Display the list of found values
+            else: 
                 print("\nСписок найденных значений из столбца TER_KT: \n")
                 for idx, value_kt in enumerate(ter_kt_values, 1):
                     print(f"{idx}. {value_kt[0]}")
@@ -668,7 +605,6 @@ while ter_kt == 0:
     while True:
         print("\nЕСЛИ НЕТ НУЖНОГО ВАРИАНТА - ВВЕДИТЕ 0\n")
         try:
-            # Ask the user to select a value from the list
             ter_kt_choice = int(input("Введите номер вашего выбора: "))
             if ter_kt_choice == 0:
                 ter_kt = 0
@@ -681,16 +617,14 @@ while ter_kt == 0:
             time.sleep(1)
             clear_output()
 
-# Search for the coefficient based on the selected values and display the result
 matching_row = session.execute(select(AlBabkinaKt).filter(and_(AlBabkinaKt.TYPE_TS_KT == type_ts, AlBabkinaKt.TER_KT == ter_kt))).scalars().first()
 selected_value_kt = matching_row.COEFF_KT
 coefficients.append(selected_value_kt)
 
 time.sleep(1)
 clear_output()
-# Close the session
 session.close()
 
-#################################################################### OSAGO price #######################################################################
+#----------------------- OSAGO price -----------------------
 result = round(reduce(mul, coefficients))
-print("\nСТОИМОСТЬ ПОЛИСА ОСАГО", result) 
+print("\nСТОИМОСТЬ ПОЛИСА ОСАГО", result)
